@@ -67,11 +67,11 @@ class Shredder(object):
     def shred(self):
         deleted = self._remove_things(self._build_iterator())
         self._logger.info("Finished deleting {} items. ".format(deleted))
-        if deleted >= 1000:
-            # This user has more than 1000 items to handle, which angers the gods of the Reddit API. So chill for a
+        if deleted >= self._batch_cooldown_size:
+            # This user has more than X items to handle, which angers the gods of the Reddit API. So chill for a
             # while and do it again.
-            self._logger.info("Waiting {} seconds and continuing...".format(self._batch_cooldown))
-            time.sleep(self._batch_cooldown)
+            self._logger.info("Waiting {} seconds and continuing...".format(self._batch_cooldown_time))
+            time.sleep(self._batch_cooldown_time)
             self._connect()
             self.shred()
 
